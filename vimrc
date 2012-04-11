@@ -62,7 +62,7 @@ set wildignore+=*.o,*.obj,.bundle,coverage,.DS_Store,_html,.git,*.rbc,*.class,.s
 set term=xterm-256color
 syntax enable
 set background=dark             " or light
-colorscheme solarized           " can't work with anything else
+colorscheme desert              " can't work with anything else
 highlight LineNr ctermfg=darkgrey
 set cursorline                  " highlight current line
 
@@ -121,10 +121,10 @@ command! Wq :wq
 command! E :e
 
 " force vim
-map <Left> :echo "damnit!"<cr>
-map <Right> :echo "you suck!"<cr>
-map <Up> :echo "this is why you fail"<cr>
-map <Down> :echo "nooooo!"<cr>
+"map <Left> :echo "use: l"<cr>
+"map <Right> :echo "use: h"<cr>
+"map <Up> :echo "use: j"<cr>
+"map <Down> :echo "use: k"<cr>
 
 " Plugin mappings
 " Fugutive shortcuts

@@ -1,7 +1,6 @@
 ### .vim
 My vim configuration
 
-      git clone git://github.com/seenmyfate/vim.git ~/.vim
+      git clone git://github.com/outbreak/vim.git ~/.vim
       cd ~/.vim && rake
-
 
