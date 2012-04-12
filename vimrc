@@ -15,6 +15,7 @@ filetype plugin indent on       " load file type plugins + indentation
 set number                      " need those line numbers
 set ruler                       " show the line/column number of the cursor position
 set shell=sh                    " hack for rvm
+
 "" Whitespace
 set nowrap                      " wrap lines, switch with set wrap/nowrap
 set linebreak                   " break line for wrapping at end of a word
@@ -22,6 +23,12 @@ set tabstop=2 shiftwidth=2      " a tab is two spaces
 set expandtab                   " use spaces
 set backspace=indent,eol,start  " backspace through everything in insert mode
 set scrolloff=3                 " Minimum number of screen lines to keep above/below the cursor
+
+" Show tabs and traling spaces
+set list listchars=tab:»·,trail:·
+
+" Mouse
+set mouse=a
 
 " Store temporary files in a central spot
 set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
@@ -136,7 +143,7 @@ map :gd :Gdiff<cr>
 map <leader>/ :Ack<space>
 
 " Powerline
-let g:Powerline_symbols = 'fancy'
+let g:Powerline_symbols = 'unicode' " unicode|fancy
 
 " Map keys to go to specific files
 map <leader>gr :topleft :split config/routes.rb<cr>
