@@ -31,8 +31,9 @@ set list listchars=tab:»·,trail:·
 set mouse=a
 
 " Store temporary files in a central spot
-set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
-set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+"set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+"set directory=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
+set nobackup
 set noswapfile
 
 augroup vimrcEx
@@ -68,9 +69,9 @@ set wildignore+=*.o,*.obj,.bundle,coverage,.DS_Store,_html,.git,*.rbc,*.class,.s
 
 "" Colors
 set term=xterm-256color
-syntax enable
 set background=dark             " or light
-colorscheme desert              " can't work with anything else
+colorscheme default
+syntax enable
 highlight LineNr ctermfg=darkgrey
 set cursorline                  " highlight current line
 
@@ -101,10 +102,10 @@ nnoremap <CR> :nohlsearch<cr>
 " Make <leader>' switch between ' and "
 nnoremap <leader>' ""yls<c-r>={'"': "'", "'": '"'}[@"]<cr><esc>
 
-" Tabs
+" Tabs:
 nmap <leader>[ :tabprevious<cr>
 nmap <leader>] :tabNext<cr>
-nmap T :tabnew<cr>
+nmap <c-T> :tabnew<cr>
 
 " Splits
 " quick split and jump into window
@@ -129,10 +130,10 @@ command! Wq :wq
 command! E :e
 
 " force vim
-"map <Left> :echo "use: l"<cr>
-"map <Right> :echo "use: h"<cr>
-"map <Up> :echo "use: j"<cr>
-"map <Down> :echo "use: k"<cr>
+"map <Left> :echoe "use: l"<cr>
+"map <Right> :echoe "use: h"<cr>
+"map <Up> :echoe "use: j"<cr>
+"map <Down> :echoe "use: k"<cr>
 
 " Plugin mappings
 " Fugutive shortcuts
