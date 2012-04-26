@@ -68,10 +68,11 @@ set wildmenu                    " enhanced command line completion
 set wildignore+=*.o,*.obj,.bundle,coverage,.DS_Store,_html,.git,*.rbc,*.class,.svn,vendor/gems/*,vendor/rails/*
 
 "" Colors
+set t_Co=256
 set term=xterm-256color
 set background=dark             " or light
-colorscheme default
 syntax enable
+colorscheme default
 highlight LineNr ctermfg=darkgrey
 set cursorline                  " highlight current line
 
