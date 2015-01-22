@@ -7,14 +7,26 @@
 " :help <command> eg
 " :help showcmd
 
-call pathogen#infect()          " load pathogen
-set nocompatible                " choose no compatibility with legacy vi
-set encoding=utf-8              " sensible encoding
-set showcmd                     " display incomplete commands
-filetype plugin indent on       " load file type plugins + indentation
+set nocompatible
+
+call pathogen#infect()
+
+syntax enable
+filetype plugin indent on
+
+set termencoding=utf-8
+set fileencodings=utf8,cp1251
+set encoding=utf-8
+
+set autoindent
+set smarttab
 set number                      " need those line numbers
 set ruler                       " show the line/column number of the cursor position
-set shell=sh                    " hack for rvm
+set showcmd                     " display incomplete commands
+
+if &shell =~# 'fish$'
+  set shell=/bin/bash
+endif
 
 "" Whitespace
 set nowrap                      " wrap lines, switch with set wrap/nowrap
@@ -23,6 +35,9 @@ set tabstop=2 shiftwidth=2      " a tab is two spaces
 set expandtab                   " use spaces
 set backspace=indent,eol,start  " backspace through everything in insert mode
 set scrolloff=3                 " Minimum number of screen lines to keep above/below the cursor
+
+set ttimeout
+set timeoutlen=50
 
 " Show tabs and traling spaces
 set list listchars=tab:»·,trail:·
@@ -47,16 +62,20 @@ augroup vimrcEx
     \ endif
 
   "for ruby, autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,haml,eruby,yaml,html,javascript,sass,cucumber set ai sw=2 sts=2 et
+  autocmd FileType ruby,haml,eruby,yaml,html,sass,cucumber set ai sw=2 sts=2 et
   autocmd FileType python set sw=4 sts=4 et
+  autocmd FileType javascript set sw=4 sts=4 et
 
-  autocmd! BufRead,BufNewFile *.sass setfiletype sass 
+  autocmd! BufRead,BufNewFile *.sass setfiletype sass
 
   autocmd BufRead *.mkd  set ai formatoptions=tcroqn2 comments=n:&gt;
   autocmd BufRead *.markdown  set ai formatoptions=tcroqn2 comments=n:&gt;
 
   " Indent p tags
-  autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+  " autocmd FileType html,eruby if g:html_indent_tags !~ '\\|p\>' | let g:html_indent_tags .= '\|p\|li\|dt\|dd' | endif
+
+  " Remove all trailing whitespace
+  autocmd BufWritePre * :%s/\s\+$//e
 augroup END
 
 "" Searching
@@ -69,10 +88,12 @@ set wildignore+=*.o,*.obj,.bundle,coverage,.DS_Store,_html,.git,*.rbc,*.class,.s
 
 "" Colors
 set t_Co=256
+set t_AB=^[[48;5;%dm
+set t_AF=^[[38;5;%dm
 set term=xterm-256color
+
 set background=dark             " or light
-syntax enable
-colorscheme default
+colorscheme jellybeans
 highlight LineNr ctermfg=darkgrey
 set cursorline                  " highlight current line
 
@@ -81,21 +102,20 @@ set cmdheight=2                 " number of lines for the command line
 set laststatus=2                " always have a status line
 set statusline=%<%f\ (%{&ft})\ %-4(%m%)%=%-19(%3l,%02c%03V%)
 set showtabline=2               " always show tab bar
-set winwidth=84                 " 
+set winwidth=84                 "
+
+" Airline
+let g:airline_powerline_fonts=0
+let g:airline#extensions#tabline#enabled=1
+let g:airline#extensions#tabline#left_sep=' '
+let g:airline#extensions#tabline#left_alt_sep='|'
 
 " Mappings
-let mapleader=","               " use , as leader instead of backslash
-
-" CTags
-" navigate with <c-]> / <c-t>
-map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
-map <C-\> :tnext<CR>
+let mapleader=","
+let g:mapleader=","
 
 " switch most recent buffers
-nnoremap <leader><leader> <c-^> 
-
-" remove whitespace
-map <leader>s :%s/\s\+$//<CR>
+nnoremap <leader><leader> <c-^>
 
 " clear the search buffer
 nnoremap <CR> :nohlsearch<cr>
@@ -105,7 +125,7 @@ nnoremap <leader>' ""yls<c-r>={'"': "'", "'": '"'}[@"]<cr><esc>
 
 " Tabs:
 nmap <leader>[ :tabprevious<cr>
-nmap <leader>] :tabNext<cr>
+nmap <leader>] :tabnext<cr>
 nmap <c-T> :tabnew<cr>
 
 " Splits
@@ -142,121 +162,12 @@ map :gs :Gstatus<cr>
 map :gb :Gblame<cr>
 map :gd :Gdiff<cr>
 
-"  Ack
-map <leader>/ :Ack<space>
-
-" Powerline
-let g:Powerline_symbols = 'unicode' " unicode|fancy
-
-" Map keys to go to specific files
-map <leader>gr :topleft :split config/routes.rb<cr>
-function! ShowRoutes()
-  " Requires 'scratch' plugin
-  :topleft 100 :split __Routes__
-  " Make sure Vim doesn't write __Routes__ as a file
-  :set buftype=nofile
-  " Delete everything
-  :normal 1GdG
-  " Put routes output in buffer
-  :0r! rake -s routes
-  " Size window to number of lines (1 plus rake output length)
-  :exec ":normal " . line("$") . "_ "
-  " Move cursor to bottom
-  :normal 1GG
-  " Delete empty trailing line
-  :normal dd
-endfunction
-map <leader>gR :call ShowRoutes()<cr>
-map <leader>gg :topleft 100 :split Gemfile<cr>
-
-" Switch between test and production code
-function! OpenTestAlternate()
-  let new_file = AlternateForCurrentFile()
-  exec ':e ' . new_file
-endfunction
-function! AlternateForCurrentFile()
-  let current_file = expand("%")
-  let new_file = current_file
-  let in_spec = match(current_file, '^spec/') != -1
-  let going_to_spec = !in_spec
-  let in_app = match(current_file, '\<controllers\>') != -1 || match(current_file, '\<models\>') != -1 || match(current_file, '\<views\>') != -1
-  if going_to_spec
-    if in_app
-      let new_file = substitute(new_file, '^app/', '', '')
-    end
-    let new_file = substitute(new_file, '\.rb$', '_spec.rb', '')
-    let new_file = 'spec/' . new_file
-  else
-    let new_file = substitute(new_file, '_spec\.rb$', '.rb', '')
-    let new_file = substitute(new_file, '^spec/', '', '')
-    if in_app
-      let new_file = 'app/' . new_file
-    end
-  endif
-  return new_file
-endfunction
-nnoremap <leader>. :call OpenTestAlternate()<cr>
-
-" Running tests
-function! RunTests(filename)
-    " Write the file and run tests for the given filename
-    :w
-    :silent !echo;echo;echo;echo;echo;echo;echo;echo;echo;echo
-    if match(a:filename, '\.feature$') != -1
-        exec ":!bundle exec cucumber --require features --format progress " . a:filename
-    else
-        if filereadable("script/test")
-            exec ":!script/test " . a:filename
-        elseif filereadable("Gemfile")
-            exec ":!bundle exec rspec --color " . a:filename
-        else
-            exec ":!rspec --color " . a:filename
-        end
-    end
-endfunction
-
-function! SetTestFile()
-    " Set the spec file that tests will be run for.
-    let t:grb_test_file=@%
-endfunction
-
-function! RunTestFile(...)
-    if a:0
-        let command_suffix = a:1
-    else
-        let command_suffix = ""
-    endif
-
-    " Run the tests for the previously-marked file.
-    let in_test_file = match(expand("%"), '\(.feature\|_spec.rb\)$') != -1
-    if in_test_file
-        call SetTestFile()
-    elseif !exists("t:grb_test_file")
-        return
-    end
-    call RunTests(t:grb_test_file . command_suffix)
-endfunction
-
-function! RunNearestTest()
-    let spec_line_number = line('.')
-    call RunTestFile(":" . spec_line_number)
-endfunction
-
-map <leader>t :call RunTestFile()<cr>
-map <leader>T :call RunNearestTest()<cr>
-map <leader>a :call RunTests('')<cr>
-
- " When editing a file, always jump to the last known cursor position.
-autocmd BufReadPost *
-  \ if line("'\"") > 0 && line("'\"") <= line("$") |
-  \   exe "normal g`\"" |
-  \ endif
-augroup END
 
 " Resize windows quickly
 " reset with <c-w>=
 nmap <leader>H :vertical res +20<cr>
 nmap <leader>L :vertical res -20<cr>
+
 " Scroll other window
 function! ScrollOtherWindowDown(count)
   normal! 
