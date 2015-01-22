@@ -6,7 +6,7 @@ task :update do
 end
 
 task :link do
-  %w[vimrc gvimrc].each do |script|
+  %w[vimrc jshintrc].each do |script|
     dotfile = File.join(ENV['HOME'], ".#{script}")
     if File.exist?(dotfile) || File.symlink?(dotfile)
       warn "~/.#{script} already exists"
