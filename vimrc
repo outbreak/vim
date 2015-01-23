@@ -112,6 +112,9 @@ let g:airline#extensions#tabline#enabled=1
 "let g:airline#extensions#tabline#left_sep=' '
 "let g:airline#extensions#tabline#left_alt_sep='|'
 
+" Mustache, Handlebars
+let g:mustache_abbreviations=1
+
 " Mappings
 let mapleader="~"
 let g:mapleader="~"
