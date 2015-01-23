@@ -37,7 +37,7 @@ set backspace=indent,eol,start  " backspace through everything in insert mode
 set scrolloff=3                 " Minimum number of screen lines to keep above/below the cursor
 
 set ttimeout
-set timeoutlen=50
+set ttimeoutlen=1
 
 " Show tabs and traling spaces
 set list listchars=tab:»·,trail:·
@@ -106,12 +106,12 @@ set winwidth=84                 "
 " Airline
 let g:airline_powerline_fonts=0
 let g:airline#extensions#tabline#enabled=1
-let g:airline#extensions#tabline#left_sep=' '
-let g:airline#extensions#tabline#left_alt_sep='|'
+"let g:airline#extensions#tabline#left_sep=' '
+"let g:airline#extensions#tabline#left_alt_sep='|'
 
 " Mappings
-let mapleader=","
-let g:mapleader=","
+let mapleader="~"
+let g:mapleader="~"
 
 " switch most recent buffers
 nnoremap <leader><leader> <c-^>
