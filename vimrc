@@ -8,11 +8,14 @@
 " :help showcmd
 
 set nocompatible
+filetype off
 
 call pathogen#infect()
 
 syntax enable
-filetype plugin indent on
+
+filetype plugin on
+filetype indent on
 
 set termencoding=utf-8
 set fileencodings=utf8,cp1251
@@ -20,8 +23,11 @@ set encoding=utf-8
 
 set autoindent
 set smarttab
-set number                      " need those line numbers
-set ruler                       " show the line/column number of the cursor position
+set expandtab
+set number
+set tabstop=2 shiftwidth=2
+set ruler
+set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set showcmd                     " display incomplete commands
 
 if &shell =~# 'fish$'
@@ -31,13 +37,11 @@ endif
 "" Whitespace
 set nowrap                      " wrap lines, switch with set wrap/nowrap
 set linebreak                   " break line for wrapping at end of a word
-set tabstop=2 shiftwidth=2      " a tab is two spaces
-set expandtab                   " use spaces
 set backspace=indent,eol,start  " backspace through everything in insert mode
 set scrolloff=3                 " Minimum number of screen lines to keep above/below the cursor
 
 set ttimeout
-set ttimeoutlen=1
+set ttimeoutlen=2
 
 " Show tabs and traling spaces
 set list listchars=tab:»·,trail:·
@@ -75,6 +79,12 @@ augroup vimrcEx
   autocmd FileType vim,c,cpp,java,php,ruby,css,html,javascript autocmd BufWritePre <buffer> :%s/\s\+$//e
 augroup END
 
+augroup JsBeautify
+  autocmd FileType javascript noremap <buffer> <C-f> :call JsBeautify()<cr>
+  autocmd FileType html noremap <buffer> <C-f> :call HtmlBeautify()<cr>
+  autocmd FileType css noremap <buffer> <C-f> :call CSSBeautify()<cr>
+augroup END
+
 augroup VimCSS3Syntax
   autocmd!
   autocmd FileType css setlocal iskeyword+=-
@@ -85,19 +95,31 @@ set hlsearch                    " highlight matches
 set incsearch                   " incremental searching
 set ignorecase                  " searches are case insensitive...
 set smartcase                   " ... unless they contain at least one capital letter
-set wildmenu                    " enhanced command line completion
-set wildignore+=*.o,*.obj,.bundle,coverage,.DS_Store,_html,.git,*.rbc,*.class,.svn,vendor/gems/*,vendor/rails/*
+
+"" Menu
+set wildmenu
+set wildignore=*.o,*.obj,*~
+set wildignore+=*vim/backups*
+set wildignore+=*sass-cache*
+set wildignore+=*DS_Store*
+set wildignore+=vendor/rails/**
+set wildignore+=vendor/cache/**
+set wildignore+=*.gem
+set wildignore+=log/**
+set wildignore+=tmp/**
+set wildignore+=*.png,*.jpg,*.gif
 
 "" Colors
 set t_Co=256
 set t_AB=^[[48;5;%dm
 set t_AF=^[[38;5;%dm
 set term=xterm-256color
+set nottyfast
+set nocursorline
 
-set background=dark             " or light
-colorscheme jellybeans
-highlight LineNr ctermfg=darkgrey
-set cursorline                  " highlight current line
+set background=dark
+colorscheme default
+" highlight LineNr ctermfg=darkgrey
 
 " Window
 set cmdheight=2                 " number of lines for the command line
@@ -108,16 +130,15 @@ set winwidth=84                 "
 
 " Airline
 let g:airline_powerline_fonts=0
-let g:airline#extensions#tabline#enabled=1
-"let g:airline#extensions#tabline#left_sep=' '
-"let g:airline#extensions#tabline#left_alt_sep='|'
+let g:airline_left_sep=''
+let g:airline_right_sep=''
 
 " Mustache, Handlebars
 let g:mustache_abbreviations=1
 
 " Mappings
-let mapleader="~"
-let g:mapleader="~"
+let mapleader=","
+let g:mapleader=","
 
 " switch most recent buffers
 nnoremap <leader><leader> <c-^>
