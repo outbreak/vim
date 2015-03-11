@@ -12,11 +12,7 @@ filetype off
 
 call pathogen#infect()
 
-syntax enable
-
-filetype plugin on
-filetype indent on
-
+set term=xterm
 set termencoding=utf-8
 set fileencodings=utf8,cp1251
 set encoding=utf-8
@@ -25,7 +21,7 @@ set autoindent
 set smarttab
 set expandtab
 set number
-set tabstop=2 shiftwidth=2
+"set tabstop=2 shiftwidth=2
 set ruler
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set showcmd                     " display incomplete commands
@@ -41,7 +37,7 @@ set backspace=indent,eol,start  " backspace through everything in insert mode
 set scrolloff=3                 " Minimum number of screen lines to keep above/below the cursor
 
 set ttimeout
-set ttimeoutlen=2
+set ttimeoutlen=3
 
 " Show tabs and traling spaces
 set list listchars=tab:»·,trail:·
@@ -58,6 +54,13 @@ set noswapfile
 augroup vimrcEx
   " Clear all autocmds in the group
   autocmd!
+
+  filetype on
+  filetype plugin on
+  filetype indent on
+
+  syntax enable
+
   autocmd FileType text setlocal textwidth=78
   " Jump to last cursor position unless it's invalid or in an event handler
   autocmd BufReadPost *
@@ -66,9 +69,15 @@ augroup vimrcEx
     \ endif
 
   "for ruby, autoindent with two spaces, always expand tabs
-  autocmd FileType ruby,haml,eruby,yaml,html,sass,cucumber,css set ai sw=2 sts=2 et
+  autocmd FileType ruby,haml,eruby,sass,cucumber set ai sw=2 sts=2 et
   autocmd FileType python set sw=4 sts=4 et
-  autocmd FileType javascript set sw=4 sts=4 et
+
+  autocmd FileType html setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType css setlocal ts=2 sts=2 sw=2 expandtab
+  autocmd FileType javascript setlocal ts=4 sts=4 sw=4 expandtab
+
+  autocmd FileType make setlocal ts=8 sts=8 sw=8 noexpandtab
+  autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
   autocmd! BufRead,BufNewFile *.sass setfiletype sass
 
@@ -77,6 +86,9 @@ augroup vimrcEx
 
   " Remove all trailing whitespace
   autocmd FileType vim,c,cpp,java,php,ruby,css,html,javascript autocmd BufWritePre <buffer> :%s/\s\+$//e
+
+  " Treat .rss files as XML
+  autocmd BufNewFile,BufRead *.rss setfiletype xml
 augroup END
 
 augroup JsBeautify
