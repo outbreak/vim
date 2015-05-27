@@ -12,14 +12,11 @@ set nocompatible
 set timeoutlen=1200
 set ttimeout
 set ttimeoutlen=50
-set nottyfast
+set ttyfast
 
 filetype off
 
 call pathogen#infect()
-
-" Mustache, Handlebars
-let g:mustache_abbreviations=1
 
 set syntax=on
 
@@ -29,9 +26,14 @@ filetype indent on
 
 syntax enable
 
+let JSHintUpdateWriteOnly = 1
+
+" Mustache, Handlebars
+let mustache_abbreviations=1
+
 " mappings
 let mapleader=","
-let g:mapleader=","
+"let g:mapleader=","
 
 set background=dark
 colorscheme default
@@ -40,7 +42,7 @@ set term=xterm
 set termencoding=utf-8
 set fileencodings=utf8,cp1251
 set encoding=utf-8
-set t_Co=256
+set t_Co=16
 
 " tabs and indention
 set autoindent
@@ -64,21 +66,23 @@ set showmode
 set cmdheight=2
 set winwidth=84
 
-hi User1 ctermfg=15 ctermbg=1 cterm=NONE
-hi User2 ctermfg=0  ctermbg=2 cterm=NONE
-hi User3 ctermfg=0  ctermbg=3 cterm=NONE
-hi User4 ctermfg=0  ctermbg=4 cterm=NONE
-hi User5 ctermfg=0  ctermbg=5 cterm=NONE
-hi User6 ctermfg=0  ctermbg=6 cterm=NONE
-hi User7 ctermfg=0  ctermbg=7 cterm=NONE
+hi User1 ctermfg=Black  ctermbg=Red cterm=NONE
+hi User2 ctermfg=Black  ctermbg=DarkGreen cterm=NONE
+hi User3 ctermfg=Black  ctermbg=Yellow cterm=NONE
+hi User4 ctermfg=Black  ctermbg=DarkBlue cterm=NONE
+hi User5 ctermfg=Black  ctermbg=Magenta cterm=NONE
+hi User6 ctermfg=Black  ctermbg=Cyan cterm=NONE
+hi User7 ctermfg=LightGrey   ctermbg=DarkGray cterm=NONE
+hi User8 ctermfg=Black  ctermbg=Gray cterm=NONE
 set statusline=\ %F%M%=
-set statusline+=%3*\ %w%r\ %*
-set statusline+=%3*\buffer\ %n\ %*
+set statusline+=%3*\%w%r\%*
+set statusline+=%8*\ %n\ %*
 set statusline+=%4*\ %{&filetype}\ %*
 set statusline+=%4*\%{&fileformat}\%*
 set statusline+=%4*\ %{&encoding}\ %*
-set statusline+=%5*\ column\ %v\ %*
-set statusline+=%6*\ row\ %l/%L\ %*
+set statusline+=%7*\ %L\ %*
+set statusline+=%8*\ %l\%*
+set statusline+=%8*\ %v\ %*
 set statusline+=%2*\ %P\ %*
 set statusline+=%1*\ 0x%04B\ %*
 set laststatus=2
@@ -106,35 +110,38 @@ function! Tabline()
   let s .= '%#TabLineFill#'
   return s
 endfunction
-hi TabLine        ctermfg=black   ctermbg=2       cterm=NONE
-hi TabLineFill    ctermfg=black   ctermbg=2       cterm=NONE
-hi TabLineSel     ctermfg=7       ctermbg=NONE    cterm=NONE
+hi TabLine        ctermfg=Black       ctermbg=LightGray          cterm=NONE
+hi TabLineFill    ctermfg=Black       ctermbg=LightGray          cterm=NONE
+hi TabLineSel     ctermfg=LightGray   ctermbg=NONE          cterm=NONE
 set tabline=%!Tabline()
 set showtabline=2
 
 " color [all languages]
 " ============================================================
-hi NonText        ctermfg=black   ctermbg=NONE    cterm=NONE
-hi Visual         ctermfg=NONE    ctermbg=8       cterm=NONE
-hi MatchParen     ctermfg=white   ctermbg=8       cterm=NONE
-hi LineNr         ctermfg=grey    ctermbg=NONE    cterm=NONE
-hi CursorLine     ctermfg=NONE    ctermbg=NONE    cterm=NONE
-hi CursorLineNR   ctermfg=black   ctermbg=yellow  cterm=NONE
-hi Cursor         ctermfg=white   ctermbg=red     cterm=NONE
+hi NonText        ctermfg=Black       ctermbg=NONE          cterm=NONE
+hi Visual         ctermfg=NONE        ctermbg=DarkGray      cterm=NONE
+hi MatchParen     ctermfg=White       ctermbg=DarkGray      cterm=NONE
+hi LineNr         ctermfg=Gray        ctermbg=NONE          cterm=NONE
+hi CursorLine     ctermfg=NONE        ctermbg=NONE          cterm=NONE
+hi CursorLineNR   ctermfg=Yellow      ctermbg=NONE          cterm=NONE
 
-hi VertSplit      ctermfg=black   ctermbg=black   cterm=NONE
+hi VertSplit      ctermfg=Black       ctermbg=Black         cterm=NONE
 
 " hi statusline current/not current window
-hi StatusLine     ctermfg=grey    ctermbg=yellow  cterm=NONE
-hi StatusLineNC   ctermfg=yellow  ctermbg=grey    cterm=NONE
+hi StatusLine     ctermfg=Black       ctermbg=Brown        cterm=NONE
+hi StatusLineNC   ctermfg=Yellow      ctermbg=Gray          cterm=NONE
 
 " hi statusline insert/normal mode
-au InsertLeave * highlight StatusLine   ctermfg=grey    ctermbg=yellow  cterm=NONE
-au InsertEnter * highlight StatusLine   ctermfg=grey    ctermbg=green   cterm=NONE
+au InsertLeave * highlight StatusLine   ctermfg=Black       ctermbg=Brown      cterm=NONE
+au InsertEnter * highlight StatusLine   ctermfg=Black       ctermbg=DarkGreen   cterm=NONE
 
 " hi cursor line insert/normal mode
-au InsertLeave * highlight CursorLineNR ctermfg=black   ctermbg=yellow  cterm=NONE
-au InsertEnter * highlight CursorLineNR ctermfg=black   ctermbg=green   cterm=NONE
+au InsertLeave * highlight CursorLineNR ctermfg=Yellow      ctermbg=NONE        cterm=NONE
+au InsertEnter * highlight CursorLineNR ctermfg=Red    ctermbg=NONE        cterm=NONE
+
+" CSS
+hi cssAttr ctermfg=LightGray ctermbg=NONE cterm=NONE
+
 
 " whitespace
 set nowrap
@@ -144,6 +151,7 @@ set scrolloff=5
 
 " mouse
 set mouse=a
+set mousehide
 
 " Store temporary files in a central spot
 "set backupdir=~/.vim-tmp,~/.tmp,~/tmp,/var/tmp,/tmp
