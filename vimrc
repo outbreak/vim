@@ -14,6 +14,8 @@ set ttimeout
 set ttimeoutlen=50
 set ttyfast
 
+set history=500
+
 filetype off
 
 call pathogen#infect()
@@ -33,10 +35,10 @@ let mustache_abbreviations=1
 
 " mappings
 let mapleader=","
-"let g:mapleader=","
+let g:mapleader=","
 
 set background=dark
-colorscheme default
+colorscheme tomorrow-night
 
 set term=xterm
 set termencoding=utf-8
